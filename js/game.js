@@ -12,7 +12,7 @@ var game = {
 	// Run on page load.
 	"onload" : function () {
 	// Initialize the video.
-	if (!me.video.init("screen",  me.video.CANVAS, 1067, 600, true, '1.0')) {
+	if (!me.video.init("screen",  me.video.CANVAS, 1067, 600, true, '1.0')) /* loads the size of the map */ {
 		alert("Your browser does not support HTML5 canvas.");
 		return;
 	}
