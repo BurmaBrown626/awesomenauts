@@ -5,7 +5,7 @@ game.PlayerEntity = me.Entity.extend ({
               width: 64,
               height: 64,
               spritewidth: "64",
-              spriteheight: "64",
+              spriteheight: "64",                                               /*adds the charcater and its spawn point */
               getShape: function(){
                   return(new me.Rect(0, 0, 64, 64)).toPolygon();
               }
