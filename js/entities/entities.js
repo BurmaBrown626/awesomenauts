@@ -21,7 +21,14 @@ game.PlayerEntity = me.Entity.extend ({
                 //sets speed of the player
                 //makes the player movent look smooth
                 this.body.vel.x += this.body.accel.x * me.timer.tick;
-            }else{
+            }
+            if(me.input.isKeyPressed("left")){
+                //sets postion of player
+                //sets speed of the player
+                //makes the player movent look smooth
+                this.body.vel.x += this.body.accel.x * me.timer.tick;
+            }
+            else{
                 this.body.vel.x = 0;
             }
             
