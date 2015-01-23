@@ -12,16 +12,17 @@ game.PlayerEntity = me.Entity.extend ({
               
               
             }]);
-            this.body.setVelocity(5, 0);
+            this.body.setVelocity(5, 20);// x and y value
         },
         
         update: function(delta){
             if(me.input.isKeyPressed("right")){
-                
-                
+                //sets postion of player
+                //sets speed of the player
+                //makes the player movent look smooth
                 this.body.vel.x += this.body.accel.x * me.timer.tick;
             }else{
-                this.body.vel = 0;
+                this.body.vel.x = 0;
             }
             
             this.body.update(delta);
