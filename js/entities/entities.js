@@ -13,6 +13,8 @@ game.PlayerEntity = me.Entity.extend({
 
             }]);
         this.body.setVelocity(5, 20);// x and y value
+        this.facing = "right";
+
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
         this.renderable.addAnimation("idle", [78]);
         this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
@@ -25,14 +27,22 @@ game.PlayerEntity = me.Entity.extend({
             //sets speed of the player
             //makes the player movent look smooth
             this.body.vel.x += this.body.accel.x * me.timer.tick;
+            this.facing = "right";
             this.flipX(true);
-
+        } else if (me.input.isKeyPressed("left")) {
+            this.facing = "left";
+            this.body.vel.x -= this.body.accel.x * me.timer.tick;
+            this.flipX(false);
         }
         else {
             this.body.vel.x = 0;
         }
+        if (me.input.isKeyPressed("jump") && !this.jumping && !this.falling) {
+            this.jumping = true;
+            this.body.vel.y -= this.body.accel.y * me.timer.tick;
+        }
 
-           if (me.input.isKeyPressed("attack")) {
+        if (me.input.isKeyPressed("attack")) {
             console.log("attack");
             if (!this.renderable.isCurrentAnimation("attack")) {
                 console.log("attack");
@@ -43,18 +53,35 @@ game.PlayerEntity = me.Entity.extend({
             }
         }
 
-        else if(this.body.vel.x !== 0) {
+        else if (this.body.vel.x !== 0) {
             if (!this.renderable.isCurrentAnimation("walk")) {
                 this.renderable.setCurrentAnimation("walk");
             }
         } else {
             this.renderable.setCurrentAnimation("idle");
         }
- 
+        me.collision.check(this, true, this.collideHandler.bind(this), true);
         this.body.update(delta);
 
         this._super(me.Entity, "update", [delta]);
         return true;
+    },
+    collideHandler: function(response) {
+        if (response.b.type === 'EnemyBaseEntity') {
+            var ydif = this.pos.y - response.b.pos.y;
+            var xdif = this.pos.x - response.b.pos.y;
+
+            console.log("xdif" + xdif + " ydif " + ydif);
+
+
+            if (xdif>-35 && this.facing==='right' && (xdif<0)){
+                this.body.vel.x = 0;
+                this.pos.x = this.pos.x -1;
+            }else if(xdif<70 && this.facing==='left' && (xdif>0)){
+                this.body.vel.x = 0;
+                this.pos.x = this.pos.x +1;
+            }
+        }
     }
 });
 game.PlayerBaseEntity = me.Entity.extend({
@@ -66,7 +93,7 @@ game.PlayerBaseEntity = me.Entity.extend({
                 spritewidth: "100",
                 spritehieght: "100",
                 getShape: function() {
-                    return (new me.Rect(0, 0, 100, 100)).toPolygon();
+                    return (new me.Rect(0, 0, 100, 69)).toPolygon();
                 }
             }]);
         this.broken = false;
@@ -105,7 +132,7 @@ game.EnemyBaseEntity = me.Entity.extend({
                 spritewidth: "100",
                 spritehieght: "100",
                 getShape: function() {
-                    return (new me.Rect(0, 0, 100, 100)).toPolygon();
+                    return (new me.Rect(0, 0, 100, 69)).toPolygon();
                 }
             }]);
         this.broken = false;
