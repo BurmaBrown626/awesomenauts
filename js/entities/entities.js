@@ -14,6 +14,9 @@ game.PlayerEntity = me.Entity.extend({
             }]);
         this.body.setVelocity(5, 20);// x and y value
         this.facing = "right";
+        this.now = new Date().getTime();
+        this.lastHit = this.now;
+        this.lastAttack = new Date().getTime();
 
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
         this.renderable.addAnimation("idle", [78]);
@@ -21,7 +24,8 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.addAnimation("attack", [65, 66, 67, 68, 69, 70, 71, 72], 80);
         this.renderable.setCurrentAnimation("idle");
     },
-    update: function(delta) {
+    update: function(delta){
+         this.now = new Date().getTime();
         if (me.input.isKeyPressed("right")) {
             //sets postion of player
             //sets speed of the player
@@ -53,11 +57,11 @@ game.PlayerEntity = me.Entity.extend({
             }
         }
 
-        else if (this.body.vel.x !== 0) {
+        else if (this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")) {
             if (!this.renderable.isCurrentAnimation("walk")) {
                 this.renderable.setCurrentAnimation("walk");
             }
-        } else {
+        } else if(!this.renderable.isCurrentAnimation("attack")){
             this.renderable.setCurrentAnimation("idle");
         }
         me.collision.check(this, true, this.collideHandler.bind(this), true);
@@ -77,12 +81,18 @@ game.PlayerEntity = me.Entity.extend({
                 this.body.falling = false;
                 this.body.vel.y = -1;
             }
-             if(xdif>-35 && this.facing==='right' && (xdif<0) && ydif>-50){
+             else if(xdif>-35 && this.facing==='right' && (xdif<0)){
                 this.body.vel.x = 0;
                 this.pos.x = this.pos.x - 1;
-            }else if(xdif<60 && this.facing==='left' && (xdif>0)){
+            }else if(xdif<60 && this.facing==='left' && xdif>0){
                 this.body.vel.x = 0;
                 this.pos.x = this.pos.x - 1;
+            }
+            
+            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000){
+                console.log("tower Hit");
+                  this.lastHit = this.now;
+                  response.b.looseHealth();
             }
         }
     }
@@ -164,5 +174,9 @@ game.EnemyBaseEntity = me.Entity.extend({
     },
     onCollision: function() {
 
+    },
+    
+    looseHealth: function(){
+        this.health--;
     }
 });
