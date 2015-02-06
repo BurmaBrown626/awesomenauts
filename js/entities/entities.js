@@ -16,7 +16,7 @@ game.PlayerEntity = me.Entity.extend({
         this.facing = "right";
         this.now = new Date().getTime();
         this.lastHit = this.now;
-        this.lastAttack = new Date().getTime();
+        this.lastAttack = new Date().getTime();//havent used this yet
 
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
         this.renderable.addAnimation("idle", [78]);
@@ -180,3 +180,29 @@ game.EnemyBaseEntity = me.Entity.extend({
         this.health--;
     }
 });
+
+game.EnemyCreep = me.Entityextend({
+        init: function(x, y, settings) {
+        this._super(me.Entity, 'init', [x, y, {
+                image: "creep1",
+                width: 32,
+                height: 64,
+                spritewidth: "32",
+                spriteheight: "64", /*adds the charcater and its spawn point */
+                getShape: function() {
+                    return(new me.Rect(0, 0, 32, 64)).toPolygon();
+                }
+
+
+            }]);
+        this.health =10;
+        this.alwaysUpdate = true;
+        this.setVelocity(3, 20);
+        this.type = "EnemyCreep";
+        this.renderable.addAnimation("walk",[3, 4, 5], 80);
+        this.renderable.setCurrentAnimation("walk");
+    },
+    update: function(){
+        
+    }
+});// adds creep into game

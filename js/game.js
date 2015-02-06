@@ -46,6 +46,7 @@ var game = {
             
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
+                me.pool.register("EnemyCreep", game.EnemyCreep, true);
                 
 
 		// Start the game.
