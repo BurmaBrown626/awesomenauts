@@ -42,7 +42,7 @@ game.PlayerEntity = me.Entity.extend({
             this.body.vel.x = 0;
         }
         if (me.input.isKeyPressed("jump") && !this.jumping && !this.falling) {
-            this.jumping = true;
+            this.body.jumping = true;
             this.body.vel.y -= this.body.accel.y * me.timer.tick;
         }
 
@@ -197,13 +197,16 @@ game.EnemyCreep = me.Entity.extend({
             }]);
         this.health =10;
         this.alwaysUpdate = true;
-        this.body.b.set.Velocity(3, 20);
+        this.body.setVelocity(3, 20);
         this.type = "EnemyCreep";                       //adds creep in game
         this.renderable.addAnimation("walk",[3, 4, 5], 80);
         this.renderable.setCurrentAnimation("walk");
     },
-    update: function(){
-        
+    update: function(delta){
+        this.body.vel.x -= this.body.accel.x * me.timer.tick;
+        this.body.update(delta);
+        this._super(me.Entity, "update", [delta]);
+        return true;
     }
 }); // adds creep into game
 game.GameManager = Object.extend({
