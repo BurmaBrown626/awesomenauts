@@ -199,7 +199,7 @@ game.EnemyCreep = me.Entity.extend({
         this.alwaysUpdate = true;
         this.body.setVelocity(3, 20);
         this.type = "EnemyCreep";                       //adds creep in game
-        this.renderable.addAnimation("walk",[3, 4, 5], 80);
+        this.renderable.addAnimation("walk",[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 80);
         this.renderable.setCurrentAnimation("walk");
     },
     update: function(delta){
